@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Home from './views/Home';
 import Shop from './views/Shop';
+import Cart from './views/Cart';
 
 const App = () => {
   // set up a state variable
@@ -16,6 +17,7 @@ const App = () => {
         {/* Any "page" of my react app can be defined as a Route within my Routes here */}
         <Route children path='/' element={<Home students={students} setStudents={setStudents}/>} />
         <Route children path='/shop' element={<Shop />} />
+        <Route children path='/cart' element={<Cart />} />
       </Routes>
     </div>
   );

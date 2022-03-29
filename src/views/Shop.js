@@ -14,7 +14,7 @@ const Shop = () => {
 
     // make api call to our flask app
     const getAnimalData = async () => {
-        let response = await axios.get('https://foxes84-tweetyblog.herokuapp.com/api/animals');
+        let response = await axios.get('https://foxes84-tweetyer.herokuapp.com/api/animals');
         return response.status === 200 ? response.data : null
     }
 
@@ -60,7 +60,7 @@ const Shop = () => {
             <div className="row">
                 {/* cards for each animal once the animals have actually loaded */}
                 {typeof animals === 'object' && !animals.then ? animals.map((animal, index) => {
-                    return <div key={index} className="card" style={{width: 18 + 'rem'}}>
+                    return <div key={index} className="card m-3" style={{width: 18 + 'rem'}}>
                         <img src={animal.image} className="card-img-top" alt={animal.name} />
                         <div className="card-body">
                             <h5 className="card-title">{animal.name}</h5>
@@ -72,7 +72,7 @@ const Shop = () => {
                             <li className="list-group-item">{animal.diet}</li>
                             <li className="list-group-item"><span className="float-left">Lifespan: {animal.lifespan} years</span><span className="float-right">Size: {animal.size}</span></li>
                         </ul>
-                        <div className="card-body">
+                        <div className="card-body"> 
                             <p className="card-link"><span className="float-left">${animal.price.toFixed(2)}</span><span className="float-right btn btn-sm btn-secondary" onClick={() => adoptAnimal(animal)}>Adopt</span></p>
                         </div>
                     </div>
