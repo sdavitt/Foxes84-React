@@ -14,8 +14,8 @@ const App = () => {
       <Navbar students={students}/>
       <Routes>
         {/* Any "page" of my react app can be defined as a Route within my Routes here */}
-        <Route children path='/' element={<Home />} />
-        <Route children path='/shop' element={<Shop students={students} setStudents={setStudents}/>} />
+        <Route children path='/' element={<Home students={students} setStudents={setStudents}/>} />
+        <Route children path='/shop' element={<Shop />} />
       </Routes>
     </div>
   );

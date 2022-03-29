@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import ProviderLayer from './ProviderLayer';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom'; // importing our router component to add to our application
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App /> {/* App is a child of the BrowserRouter such that App has access to BrowserRouter functionality */}
+      <ProviderLayer />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
