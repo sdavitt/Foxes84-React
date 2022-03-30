@@ -1,6 +1,6 @@
 // imports at the top
 import { Link } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { DataContext } from '../context/DataProvider';
 
 // function definition for my component - return a single JSX element
