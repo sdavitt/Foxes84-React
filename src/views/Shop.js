@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useState, useContext } from "react";
 import { DataContext } from "../context/DataProvider";
+import { useDatabase, useUser } from "reactfire";
+import { set, ref } from "firebase/database";
 
 // function definition for my component - return a single JSX element
 const Shop = () => {
@@ -11,6 +13,10 @@ const Shop = () => {
     3. set that state variable based on the results of our api call
     4. Set up conditional JSX templating such that if we have products, we display them. Otherwise, we display loading.
     */
+    // access our db from the db provider thru the useDatabase hook
+    const db = useDatabase();
+    // access our user
+    const { data: user } = useUser();
 
     // make api call to our flask app
     const getAnimalData = async () => {
@@ -30,13 +36,13 @@ const Shop = () => {
     const [animals, setAnimals] = useState(() => loadAnimalData());
 
     // access our cart from our Context.Provider as well as its setter
-    const {cart, setCart} = useContext(DataContext);
+    const { cart, setCart } = useContext(DataContext);
 
     // function to adopt an animal (aka add to cart)
-    const adoptAnimal = (animal) =>{
+    const adoptAnimal = (animal) => {
         // add the animal to our cart object - CANNOT MUTATE STATE DIRECTLY
         // make a copy
-        let mutableCart = {...cart}
+        let mutableCart = { ...cart }
         // modify the copy
         // increase size by one
         mutableCart.size++;
@@ -45,9 +51,13 @@ const Shop = () => {
         // if the animal is in the cart already, increase quantity by one, otherwise add the animal to the cart
         mutableCart.animals[animal.id] ?
         mutableCart.animals[animal.id].quantity++ :
-        mutableCart.animals[animal.id] = {'data': animal, 'quantity': 1};
+        mutableCart.animals[animal.id] = { 'data': animal, 'quantity': 1 };
         // testing console log
         console.log(mutableCart);
+        // set the db right before we set the new state!
+        if (user) {
+            set(ref(db, 'carts/' + user.uid), mutableCart);
+        }
         // set state
         setCart(mutableCart);
     }
@@ -60,7 +70,7 @@ const Shop = () => {
             <div className="row">
                 {/* cards for each animal once the animals have actually loaded */}
                 {typeof animals === 'object' && !animals.then ? animals.map((animal, index) => {
-                    return <div key={index} className="card m-3" style={{width: 18 + 'rem'}}>
+                    return <div key={index} className="card m-3" style={{ width: 18 + 'rem' }}>
                         <img src={animal.image} className="card-img-top" alt={animal.name} />
                         <div className="card-body">
                             <h5 className="card-title">{animal.name}</h5>
@@ -72,7 +82,7 @@ const Shop = () => {
                             <li className="list-group-item">{animal.diet}</li>
                             <li className="list-group-item"><span className="float-left">Lifespan: {animal.lifespan} years</span><span className="float-right">Size: {animal.size}</span></li>
                         </ul>
-                        <div className="card-body"> 
+                        <div className="card-body">
                             <p className="card-link"><span className="float-left">${animal.price.toFixed(2)}</span><span className="float-right btn btn-sm btn-secondary" onClick={() => adoptAnimal(animal)}>Adopt</span></p>
                         </div>
                     </div>

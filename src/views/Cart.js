@@ -2,6 +2,8 @@ import "../css/customCartStyling.css"
 import { useContext } from "react"
 import { DataContext } from "../context/DataProvider"
 import { Link } from "react-router-dom";
+import { useDatabase, useUser } from "reactfire";
+import { set, ref } from "firebase/database";
 
 const Cart = () => {
     /* 
@@ -13,7 +15,15 @@ const Cart = () => {
     */
     const { cart, setCart } = useContext(DataContext);
 
+    // access our db from the db provider thru the useDatabase hook
+    const db = useDatabase();
+    // access our user
+    const { data: user } = useUser();
+
     const clearCart = () => {
+        if (user){
+            set(ref(db, 'carts/' + user.uid), null);
+        }
         setCart({size: 0, total: 0, animals: {}});
     }
 
@@ -24,6 +34,10 @@ const Cart = () => {
         mutableCart.size++;
         mutableCart.total += mutableCart.animals[id].data.price;
         mutableCart.animals[id].quantity++;
+        // set the db right before we set the new state!
+        if (user) {
+            set(ref(db, 'carts/' + user.uid), mutableCart);
+        }
         // set state
         console.log(mutableCart);
         setCart(mutableCart);
@@ -41,6 +55,10 @@ const Cart = () => {
         mutableCart.animals[id].quantity > 1 ?
         mutableCart.animals[id].quantity-- :
         delete mutableCart.animals[id]
+        // set the db right before we set the new state!
+        if (user) {
+            set(ref(db, 'carts/' + user.uid), mutableCart);
+        }
         // set state
         console.log(mutableCart);
         setCart(mutableCart);
@@ -56,6 +74,10 @@ const Cart = () => {
         mutableCart.total -= mutableCart.animals[id].quantity*mutableCart.animals[id].data.price;
         // remove the animal
         delete mutableCart.animals[id]
+        // set the db right before we set the new state!
+        if (user) {
+            set(ref(db, 'carts/' + user.uid), mutableCart);
+        }
         // set state
         console.log(mutableCart);
         setCart(mutableCart);

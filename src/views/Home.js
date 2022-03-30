@@ -1,5 +1,6 @@
 // imports at the top
 import { useState, useEffect } from 'react';
+import { useUser } from 'reactfire';
 
 // function definition for my component - return a single JSX element
 const Home = props => {
@@ -39,12 +40,18 @@ const Home = props => {
         props.setStudents(studentscopy);
     }
 
+    // access our user thru reactfire useUser hook - grabs from our AuthProvider
+    const { data: user } = useUser();
+
     // useEffect hook - required parameter: a callback function to run when the parent component (Home here) is rendered (initially loaded) or re-rendered (updated)
     useEffect(() => {console.log('Home component rendered or re-rendered!')});
 
     return (
         <div>
+            { user ?
+            <h1>Homepage! Welcome to React, {user.displayName}!</h1> :
             <h1>Homepage! Welcome to React, Foxes!</h1>
+            }
             <h3>{animal}</h3>
             <button className='btn btn-secondary' onClick={changeAnimal}>Change Animal</button>
             <h1>Current Students:</h1>
