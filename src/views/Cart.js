@@ -21,15 +21,15 @@ const Cart = () => {
     const { data: user } = useUser();
 
     const clearCart = () => {
-        if (user){
+        if (user) {
             set(ref(db, 'carts/' + user.uid), null);
         }
-        setCart({size: 0, total: 0, animals: {}});
+        setCart({ size: 0, total: 0, animals: {} });
     }
 
     const increaseQuantity = id => {
         // create a copy of current state
-        let mutableCart = {...cart};
+        let mutableCart = { ...cart };
         // modify the copy
         mutableCart.size++;
         mutableCart.total += mutableCart.animals[id].data.price;
@@ -45,7 +45,7 @@ const Cart = () => {
 
     const decreaseQuantity = id => {
         // create a copy of current state
-        let mutableCart = {...cart};
+        let mutableCart = { ...cart };
         // modify the copy
         // same modification of overall cart size and total
         mutableCart.size--;
@@ -53,8 +53,8 @@ const Cart = () => {
         // if more than one of that animal, decrease quantity
         // if only one of that animal, remove all info about that animal from the cart
         mutableCart.animals[id].quantity > 1 ?
-        mutableCart.animals[id].quantity-- :
-        delete mutableCart.animals[id]
+            mutableCart.animals[id].quantity-- :
+            delete mutableCart.animals[id]
         // set the db right before we set the new state!
         if (user) {
             set(ref(db, 'carts/' + user.uid), mutableCart);
@@ -66,12 +66,12 @@ const Cart = () => {
 
     const removeItem = id => {
         // create a copy of current state
-        let mutableCart = {...cart};
+        let mutableCart = { ...cart };
         // modify the copy
         // reduce size of cart by quantity of this item
         mutableCart.size -= mutableCart.animals[id].quantity;
         // reduce the total of the cart by the quantity of this item times the price of the item
-        mutableCart.total -= mutableCart.animals[id].quantity*mutableCart.animals[id].data.price;
+        mutableCart.total -= mutableCart.animals[id].quantity * mutableCart.animals[id].data.price;
         // remove the animal
         delete mutableCart.animals[id]
         // set the db right before we set the new state!
@@ -99,14 +99,14 @@ const Cart = () => {
                                 </div>
                             </div>
                             <div className="d-flex flex-row align-items-center qty">
-                                <i className="fa fa-minus text-danger" onClick={() => {decreaseQuantity(animal.data.id)}}></i>
+                                <i className="fa fa-minus text-danger" onClick={() => { decreaseQuantity(animal.data.id) }}></i>
                                 <h5 className="text-grey mt-1 mr-1 ml-1">{animal.quantity}</h5>
-                                <i className="fa fa-plus text-success" onClick={() => {increaseQuantity(animal.data.id)}}></i>
+                                <i className="fa fa-plus text-success" onClick={() => { increaseQuantity(animal.data.id) }}></i>
                             </div>
                             <div>
                                 <h5 className="text-grey">${animal.data.price.toFixed(2)} ea.</h5>
                             </div>
-                            <div className="d-flex align-items-center"><i className="fa fa-trash mb-1 text-danger" onClick={() => {removeItem(animal.data.id)}}></i></div>
+                            <div className="d-flex align-items-center"><i className="fa fa-trash mb-1 text-danger" onClick={() => { removeItem(animal.data.id) }}></i></div>
                         </div>
                     })
                     }
@@ -118,7 +118,13 @@ const Cart = () => {
                         </div>
                         <div className="d-flex align-items-center"><button className="btn btn-sm btn-danger" onClick={clearCart}>Clear Cart</button></div>
                     </div>
-                    <div className="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded"><Link to="/" className="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button" disabled>Checkout</Link></div>
+                    <div className="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded">
+                        {!user ?
+                            <button className="btn btn-warning btn-block btn-lg ml-2" type="button" disabled>Please login to checkout</button>
+                            :
+                            <Link to="/checkout" className="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button">Checkout</Link>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

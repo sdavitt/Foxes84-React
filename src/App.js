@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Home from './views/Home';
 import Shop from './views/Shop';
 import Cart from './views/Cart';
+import Checkout from './views/Checkout';
 
 const App = () => {
   // set up a state variable
@@ -18,6 +19,7 @@ const App = () => {
         <Route children path='/' element={<Home students={students} setStudents={setStudents}/>} />
         <Route children path='/shop' element={<Shop />} />
         <Route children path='/cart' element={<Cart />} />
+        <Route children path='/checkout' element={<Checkout />} />
       </Routes>
     </div>
   );
