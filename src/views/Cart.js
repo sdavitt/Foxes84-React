@@ -28,6 +28,11 @@ const Cart = () => {
     }
 
     const increaseQuantity = id => {
+        // check inventory
+        if (cart.animals[id] && cart.animals[id].data.inventory === cart.animals[id].quantity){
+            console.log('out of stock');
+            return
+        }
         // create a copy of current state
         let mutableCart = { ...cart };
         // modify the copy

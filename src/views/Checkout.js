@@ -15,7 +15,7 @@ const Checkout = () => {
     useEffect(() => {
         // create paymentintent as soon as this component renders by making an api call to our flask app
         if (user) {
-            fetch("http://127.0.0.1:5000/pay/create-payment-intent", {
+            fetch("https://foxes84-tweetyer.herokuapp.com/pay/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 'cart': cart, 'user': user }),

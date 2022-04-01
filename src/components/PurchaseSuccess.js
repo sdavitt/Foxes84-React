@@ -10,6 +10,13 @@ const PurchaseSuccess = () => {
     const { setCart, confirmOrder } = useContext(DataContext);
 
     useEffect (() => {
+        // update flask inventory
+        fetch("https://foxes84-tweetyer.herokuapp.com/api/inventoryupdate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(confirmOrder.order),
+            })
+            .then((res) => console.log(res.json()))
         // clear user cart
         set(ref(db, `carts/${user.uid}`), null);
         // clear local cart

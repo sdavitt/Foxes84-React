@@ -34,12 +34,18 @@ const Shop = () => {
 
     // state variable setup
     const [animals, setAnimals] = useState(() => loadAnimalData());
+    const [invMsg, setInvMsg] = useState(false);
 
     // access our cart from our Context.Provider as well as its setter
     const { cart, setCart } = useContext(DataContext);
 
     // function to adopt an animal (aka add to cart)
     const adoptAnimal = (animal) => {
+        // check inventory before we start changing cart
+        if (cart.animals[animal.id] && animal.inventory === cart.animals[animal.id].quantity){
+            setInvMsg(`Apologies, you are already adopting all of our ${animal.name}!`)
+            return
+        }
         // add the animal to our cart object - CANNOT MUTATE STATE DIRECTLY
         // make a copy
         let mutableCart = { ...cart }
@@ -66,6 +72,7 @@ const Shop = () => {
         <div className="container">
             <div className="row justify-content-center">
                 <h1>Foxes Animal Market</h1>
+                { invMsg ? <h3>{invMsg}</h3> : null }
             </div>
             <div className="row">
                 {/* cards for each animal once the animals have actually loaded */}
@@ -81,9 +88,16 @@ const Shop = () => {
                             <li className="list-group-item">{animal.habitat}</li>
                             <li className="list-group-item">{animal.diet}</li>
                             <li className="list-group-item"><span className="float-left">Lifespan: {animal.lifespan} years</span><span className="float-right">Size: {animal.size}</span></li>
+                            <li className="list-group-item"><span className="float-left">Number ready for adoption: {animal.inventory}</span></li>
                         </ul>
                         <div className="card-body">
-                            <p className="card-link"><span className="float-left">${animal.price.toFixed(2)}</span><span className="float-right btn btn-sm btn-secondary" onClick={() => adoptAnimal(animal)}>Adopt</span></p>
+                            <p className="card-link"><span className="float-left">${animal.price.toFixed(2)}</span>
+                            { animal.inventory > 0 ?
+                                <span className="float-right btn btn-sm btn-secondary" onClick={() => adoptAnimal(animal)}>Adopt</span>
+                                :
+                                <span className="float-right btn btn-sm btn-secondary">None available</span>
+                            }
+                            </p>
                         </div>
                     </div>
                 }) :
